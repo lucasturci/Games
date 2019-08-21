@@ -15,10 +15,10 @@ If you're using Linux, Allegro installation is simple:
 
 ## HOW TO COMPILE TETRIS
 
-To compile just clone download the files and use the Makefile:
+To compile just download the files and use the Makefile:
 
     git clone https://github.com/lucasturci/Games
-    cd Tetris
+    cd Games/Tetris
     make
 
 ## HOW TO RUN
