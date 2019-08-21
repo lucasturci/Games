@@ -470,14 +470,14 @@ GAME_MANAGER * create_game() {
 	char path[PATH_MAX], *p;
 	GAME_MANAGER * game = (GAME_MANAGER *) calloc(1, sizeof(GAME_MANAGER));
 
-	/*
-	// sprintf(path, "%s/.highscore", exec_path);
-	// /* Highscore*/
-	// fp = fopen(path, "ra");
-	// if(fp) {
-	// 	fscanf(fp, "%d", &game->highscore);
-	// 	fclose(fp);
-	// }
+	
+	sprintf(path, "%s/.highscore", exec_path);
+	/* Highscore*/
+	fp = fopen(path, "ra");
+	if(fp) {
+		fscanf(fp, "%d", &game->highscore);
+		fclose(fp);
+	}
 
 	
 
@@ -738,7 +738,6 @@ void game_loop(GAME_MANAGER * game) {
 				al_start_timer(game->regressive_timer);
 				break;
 			case 3: //3.. 2.. 1..
-				if(!done) printf("cheguei no estado 3\n");
 				done = 1;
 
 				if(al_get_next_event(game->events_queue, &evt)) {
@@ -895,6 +894,8 @@ void register_score(GAME_MANAGER * game) {
 	char path[PATH_MAX];
 	sprintf(path, "%s/.highscore", exec_path);
 
+	struct stat st = {0};
+
 	fp = fopen(path, "wa");
 	if(!fp) {
 		fprintf(stderr, "Could not register highscore: %d", game->highscore);
@@ -907,7 +908,7 @@ void register_score(GAME_MANAGER * game) {
 
 void terminate_game(GAME_MANAGER * game) {
 	int i;
-	// if(game->should_update_highscore) register_score(game);
+	if(game->should_update_highscore) register_score(game);
 
 	for(i = 0; i < BLOCKS_IN_COLUMN; ++i)
 		free(game->block_matrix[i]);
@@ -944,17 +945,18 @@ void terminate_game(GAME_MANAGER * game) {
 	free(game);	
 }
 
-void get_exec_path(char * exec) {
-	int i;
-	strcat(exec, "/Contents/Resources/");
+
+void get_exec_path(char * s) {
+	int len = strlen(s);
+	for(char * p = s + len; p != s && *p != '/'; p--) *p = 0;
+
 }
 
 int main(int argc, char * argv[]) {
 	GAME_MANAGER * game; 
-	strcpy(exec_path, "/home/lucas/Dropbox/Developing_Lab/Allegro/tetris");
-	//get_exec_path(exec_path);
-	printf("%s\n", exec_path);
 
+	strcpy(exec_path, argv[0]);
+	get_exec_path(exec_path);
 	al_init(); //configuration of the game
 
 	game = create_game();
