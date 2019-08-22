@@ -1,7 +1,7 @@
 SRC = $(wildcard *.c)
 OBJECTS = $(SRC:.c=.o)
 PROGNAME = snake_game
-LINKS = -lallegro_main -lallegro_primitives -lallegro_font -lallegro_ttf  -lallegro
+LINKS = `pkg-config allegro-5 allegro_primitives-5 allegro_font-5 allegro_ttf-5 --libs --cflags`
 
 all: $(OBJECTS)
 	@gcc -o $(PROGNAME) $(OBJECTS) $(LINKS)
